@@ -4,6 +4,7 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import { config } from 'dotenv';
 import authRoutes from './routes/auth_routes.js';
+import profileRoutes from './routes/profile_routes.js';
 
 
 config(); // Load environment variables
@@ -16,6 +17,7 @@ app.use(bodyParser.json({ limit: '100mb' }));
 app.use(bodyParser.urlencoded({ limit: '100mb', extended: true }));
 app.use(cors());
 app.use('/auth', authRoutes);
+app.use('/profile', profileRoutes);
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI)
