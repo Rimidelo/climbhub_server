@@ -1,5 +1,5 @@
 // controllers/profile_controller.js
-import Profile from '../models/profile';
+import Profile from '../models/profile.js';
 
 // Create a new profile
 export const createProfile = async (req, res) => {
@@ -27,19 +27,21 @@ export const createProfile = async (req, res) => {
 
 // Get a profile by ID
 export const getProfile = async (req, res) => {
+    const { id } = req.params;
+    
     try {
-        const profile = await Profile.findById(req.params.id)
+        const profile = await Profile.findOne({ user: id })
             .populate('user', 'username email') // Adjust fields as necessary
             .populate('gyms', 'name location'); // Adjust fields as necessary
 
         if (!profile) {
-            return res.status(404).json({ error: 'Profile not found' });
+            return res.status(404).json({ error: 'Profile not found for the given user.' });
         }
 
         res.json(profile);
     } catch (error) {
-        console.error('Error fetching profile:', error);
-        res.status(500).json({ error: 'Server error' });
+        console.error('Error fetching profile by user ID:', error);
+        res.status(500).json({ error: 'Server error while fetching profile.' });
     }
 };
 

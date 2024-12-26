@@ -1,7 +1,7 @@
 // routes/video_routes.js
 import express from 'express';
 import multer from 'multer';
-import { uploadVideo,getAllVideos } from '../controllers/videos_controller.js';
+import { uploadVideo,getAllVideos,likeVideo,addComment,getComments } from '../controllers/videos_controller.js';
 
 const router = express.Router();
 
@@ -13,5 +13,8 @@ const upload = multer({ storage });
 
 router.get('/', getAllVideos);
 router.post('/', upload.single('videoFile'), uploadVideo);
+router.post('/:videoId/like', likeVideo);
+router.post('/:videoId/comment', addComment);
+router.get('/:videoId/comments', getComments);
 
 export default router;
