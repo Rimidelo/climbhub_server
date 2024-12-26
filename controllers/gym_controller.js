@@ -1,4 +1,4 @@
-import Gym from '../models/gym'; // Adjust the path as necessary
+import Gym from '../models/gym.js'; // Adjust the path as necessary
 
 // Controller to get all gyms
 const getGyms = async (req, res) => {

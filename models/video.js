@@ -1,3 +1,5 @@
+// models/Video.js
+
 import mongoose from 'mongoose';
 
 const VideoSchema = new mongoose.Schema({
@@ -7,6 +9,8 @@ const VideoSchema = new mongoose.Schema({
   uploadDate: { type: Date, default: Date.now },
   likesCount: { type: Number, default: 0 },
   profile: { type: mongoose.Schema.Types.ObjectId, ref: 'Profile', required: true },
+  // New field to store the URL/path of the uploaded video
+  videoUrl: { type: String, required: true },
 });
 
 export default mongoose.model('Video', VideoSchema);
