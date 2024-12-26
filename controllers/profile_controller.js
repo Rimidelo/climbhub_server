@@ -1,10 +1,10 @@
 // controllers/profile_controller.js
-import Profile from '../models/Profile.js';
+import Profile from '../models/profile';
 
 // Create a new profile
 export const createProfile = async (req, res) => {
     try {
-        const { user, skillLevel, preferredStyles, gyms } = req.body;
+        const { user, skillLevel, gyms } = req.body;
 
         // Validate required fields
         if (!user) {
@@ -14,7 +14,6 @@ export const createProfile = async (req, res) => {
         const newProfile = new Profile({
             user,
             skillLevel,
-            preferredStyles,
             gyms,
         });
 

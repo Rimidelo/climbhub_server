@@ -5,7 +5,6 @@ const ProfileSchema = new mongoose.Schema({
   savedVideos: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Video' }],
   uploadedVideos: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Video' }],
   skillLevel: { type: String, enum: ['beginner', 'intermediate', 'advanced'] },
-  preferredStyles: [String],
   gyms: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Gym' }],
 });
 
