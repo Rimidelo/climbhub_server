@@ -20,7 +20,7 @@ app.use(bodyParser.urlencoded({ limit: '100mb', extended: true }));
 app.use(cors());
 app.use('/auth', authRoutes);
 app.use('/profile', profileRoutes);
-app.use('/video', videoRoutes);
+app.use('/videos', videoRoutes);
 app.use('/gyms', gymRoutes);
 
 // Connect to MongoDB

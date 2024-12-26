@@ -1,7 +1,7 @@
 // routes/video_routes.js
 import express from 'express';
 import multer from 'multer';
-import { uploadVideo } from '../controllers/videos_controller.js';
+import { uploadVideo,getAllVideos } from '../controllers/videos_controller.js';
 
 const router = express.Router();
 
@@ -10,6 +10,8 @@ const router = express.Router();
 const storage = multer.memoryStorage(); // store file in memory as a buffer
 const upload = multer({ storage });
 
+
+router.get('/', getAllVideos);
 router.post('/', upload.single('videoFile'), uploadVideo);
 
 export default router;

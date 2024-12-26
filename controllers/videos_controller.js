@@ -7,9 +7,9 @@ import { uploadToGCP } from '../utils/gcp.js'; // We'll define this function lat
 export const uploadVideo = async (req, res) => {
   try {
     const { description, difficultyLevel, gym, profile } = req.body;
-    
+
     // The file is attached by Multer. If using GCP, we might handle differently. 
-    const file = req.file; 
+    const file = req.file;
     if (!file) {
       return res.status(400).json({ error: 'No video file uploaded.' });
     }
@@ -36,3 +36,13 @@ export const uploadVideo = async (req, res) => {
   }
 };
 
+// GET all videos
+export const getAllVideos = async (req, res) => {
+  try {
+    const videos = await Video.find().populate('profile');
+    res.status(200).json(videos);
+  } catch (error) {
+    console.error('Error fetching videos:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
