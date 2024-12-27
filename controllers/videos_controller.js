@@ -42,7 +42,13 @@ export const uploadVideo = async (req, res) => {
 export const getAllVideos = async (req, res) => {
   try {
     const videos = await Video.find()
-      .populate('profile') // Populate profile information
+      .populate({
+        path: 'profile',
+        populate: {
+          path: 'user',
+          select: 'name email', // Populate the 'user' field with 'name' and 'email'
+        },
+      })
       .populate('gym', 'name location'); // Populate gym name and location fields
 
     res.status(200).json(videos);
@@ -51,6 +57,7 @@ export const getAllVideos = async (req, res) => {
     res.status(500).json({ error: 'Server error' });
   }
 };
+
 
 
 // Like or Unlike a video
