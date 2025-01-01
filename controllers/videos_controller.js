@@ -8,9 +8,9 @@ import { uploadToGCP } from '../utils/gcp.js'; // We'll define this function lat
 // Controller to handle the video upload
 export const uploadVideo = async (req, res) => {
   try {
-    const { description, difficultyLevel, gym, profile } = req.body;
+    const { description, gradingSystem, difficultyLevel, gym, profile } = req.body;
 
-    // The file is attached by Multer. If using GCP, we might handle differently. 
+    // The file is attached by Multer. If using GCP, we might handle differently.
     const file = req.file;
     if (!file) {
       return res.status(400).json({ error: 'No video file uploaded.' });
@@ -22,10 +22,11 @@ export const uploadVideo = async (req, res) => {
     // 2) Create a new Video document in MongoDB
     const newVideo = await Video.create({
       description,
+      gradingSystem, // Include grading system
       difficultyLevel,
       gym: gym || null,
       profile,
-      videoUrl, // store the URL we got from GCP
+      videoUrl, // Store the URL we got from GCP
     });
 
     return res.status(201).json({
@@ -37,6 +38,7 @@ export const uploadVideo = async (req, res) => {
     return res.status(500).json({ error: 'Internal server error.' });
   }
 };
+
 
 // GET all videos
 export const getAllVideos = async (req, res) => {
