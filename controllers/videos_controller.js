@@ -162,7 +162,6 @@ export const getComments = async (req, res) => {
 
 export const getVideosByProfile = async (req, res) => {
   const { profileId } = req.params;
-  
 
   try {
     const videos = await Video.find({ profile: profileId })
@@ -170,18 +169,15 @@ export const getVideosByProfile = async (req, res) => {
         path: 'profile',
         populate: {
           path: 'user',
-          select: 'name email image', // Populate the 'user' field with 'name' and 'email'
+          select: 'name email image',
         },
       })
-      .populate('gym', 'name location'); // Populate gym name and location fields
+      .populate('gym', 'name location');
 
-    if (!videos.length) {
-      return res.status(404).json({ error: 'No videos found for this profile.' });
-    }
-
-    res.status(200).json(videos);
+    return res.status(200).json(videos); // OK to return an empty array if none
   } catch (error) {
     console.error('Error fetching videos by profile:', error);
-    res.status(500).json({ error: 'Server error' });
+    return res.status(500).json({ error: 'Server error' });
   }
 };
+
