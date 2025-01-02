@@ -160,3 +160,28 @@ export const getComments = async (req, res) => {
 };
 
 
+export const getVideosByProfile = async (req, res) => {
+  const { profileId } = req.params;
+  
+
+  try {
+    const videos = await Video.find({ profile: profileId })
+      .populate({
+        path: 'profile',
+        populate: {
+          path: 'user',
+          select: 'name email', // Populate the 'user' field with 'name' and 'email'
+        },
+      })
+      .populate('gym', 'name location'); // Populate gym name and location fields
+
+    if (!videos.length) {
+      return res.status(404).json({ error: 'No videos found for this profile.' });
+    }
+
+    res.status(200).json(videos);
+  } catch (error) {
+    console.error('Error fetching videos by profile:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
