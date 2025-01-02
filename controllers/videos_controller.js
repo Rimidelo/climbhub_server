@@ -48,7 +48,7 @@ export const getAllVideos = async (req, res) => {
         path: 'profile',
         populate: {
           path: 'user',
-          select: 'name email', // Populate the 'user' field with 'name' and 'email'
+          select: 'name email image', // Populate the 'user' field with 'name' and 'email'
         },
       })
       .populate('gym', 'name location'); // Populate gym name and location fields
@@ -170,7 +170,7 @@ export const getVideosByProfile = async (req, res) => {
         path: 'profile',
         populate: {
           path: 'user',
-          select: 'name email', // Populate the 'user' field with 'name' and 'email'
+          select: 'name email image', // Populate the 'user' field with 'name' and 'email'
         },
       })
       .populate('gym', 'name location'); // Populate gym name and location fields
