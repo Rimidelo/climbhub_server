@@ -148,7 +148,7 @@ export const getComments = async (req, res) => {
         select: 'user', // Include the 'user' reference from Profile
         populate: {
           path: 'user',
-          select: 'name email', // Include name (username equivalent) and email from User
+          select: 'name email image', // Include name (username equivalent) and email from User
         },
       });
 
