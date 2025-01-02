@@ -7,6 +7,7 @@ import authRoutes from './routes/auth_routes.js';
 import profileRoutes from './routes/profile_routes.js';
 import videoRoutes from './routes/video_routes.js'
 import gymRoutes from './routes/gym_routes.js';
+import userRoutes from './routes/user_routes.js';
 
 
 config(); // Load environment variables
@@ -22,6 +23,7 @@ app.use('/auth', authRoutes);
 app.use('/profile', profileRoutes);
 app.use('/videos', videoRoutes);
 app.use('/gyms', gymRoutes);
+app.use('/users', userRoutes);
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI)

@@ -3,6 +3,7 @@ import { Storage } from '@google-cloud/storage';
 import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
 
+
 // 1) We configure the GCP client
 // Make sure you have your GOOGLE_APPLICATION_CREDENTIALS set or pass in keyFilename
 
@@ -50,6 +51,33 @@ export const uploadToGCP = async (file) => {
     });
 
     // Finally, write the file buffer to the stream
+    blobStream.end(file.buffer);
+  });
+};
+
+const imageBucketName = 'climbhub-images'; // Name for image storage bucket
+const imageBucket = storage.bucket(imageBucketName);
+
+export const uploadImageToGCP = async (file) => {
+  return new Promise((resolve, reject) => {
+    const uniqueName = `${uuidv4()}-${file.originalname}`;
+    const blob = imageBucket.file(uniqueName);
+
+    const blobStream = blob.createWriteStream({
+      resumable: false,
+      contentType: file.mimetype,
+    });
+
+    blobStream.on('error', (err) => {
+      console.error('GCP image upload error:', err);
+      reject(err);
+    });
+
+    blobStream.on('finish', () => {
+      const publicUrl = `https://storage.googleapis.com/${imageBucketName}/${blob.name}`;
+      resolve(publicUrl);
+    });
+
     blobStream.end(file.buffer);
   });
 };

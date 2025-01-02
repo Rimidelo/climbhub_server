@@ -31,7 +31,7 @@ export const getProfile = async (req, res) => {
     
     try {
         const profile = await Profile.findOne({ user: id })
-            .populate('user', 'username email') // Adjust fields as necessary
+            .populate('user', 'name email image ') // Adjust fields as necessary
             .populate('gyms', 'name location'); // Adjust fields as necessary
 
         if (!profile) {
