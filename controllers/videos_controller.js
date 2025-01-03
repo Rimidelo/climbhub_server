@@ -181,3 +181,26 @@ export const getVideosByProfile = async (req, res) => {
   }
 };
 
+export const deleteVideo = async (req, res) => {
+  const { videoId } = req.params;
+
+  try {
+    // Find and delete the video
+    const video = await Video.findByIdAndDelete(videoId);
+    if (!video) {
+      return res.status(404).json({ error: 'Video not found' });
+    }
+
+    // Optional: Remove associated comments
+    await Comment.deleteMany({ video: videoId });
+
+    // Optional: Remove the video file from storage (if using GCP or other storage solutions)
+    // Note: Ensure you have the logic in your utils to handle file deletion
+    // await deleteFromGCP(video.videoUrl);
+
+    return res.status(200).json({ message: 'Video deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting video:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
