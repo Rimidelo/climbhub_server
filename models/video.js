@@ -17,7 +17,7 @@ const VideoSchema = new mongoose.Schema(
             return ['V0', 'V1', 'V2', 'V3', 'V4', 'V5', 'V6', 'V7', 'V8', 'V9', 'V10'].includes(value);
           }
           if (this.gradingSystem === 'Japanese-Colored') {
-            return ['White', 'Yellow', 'Orange', 'Green', 'Blue', 'Red', 'Black'].includes(value);
+            return ['White', 'Yellow', 'Orange', 'Green', 'Blue', 'Red', 'Black','Pink','Light Green','Cyan'].includes(value);
           }
           return false;
         },
