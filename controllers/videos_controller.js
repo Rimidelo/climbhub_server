@@ -254,6 +254,7 @@ export const getVideosByPreferences = async (req, res) => {
         },
       ],
     })
+      .sort({ createdAt: -1 })
       .populate({
         path: 'profile',
         populate: { path: 'user', select: 'name email image' },
@@ -266,6 +267,7 @@ export const getVideosByPreferences = async (req, res) => {
     const otherVideos = await Video.find({
       _id: { $nin: preferredVideos.map((video) => video._id) }, // Exclude preferred videos
     })
+      .sort({ createdAt: -1 })
       .populate({
         path: 'profile',
         populate: { path: 'user', select: 'name email image' },
