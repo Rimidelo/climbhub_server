@@ -204,3 +204,82 @@ export const deleteVideo = async (req, res) => {
     res.status(500).json({ error: 'Server error' });
   }
 };
+
+export const getVideosByPreferences = async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    // Fetch user profile
+    const profile = await Profile.findOne({ user: userId }).populate('gyms');
+    if (!profile) {
+      return res.status(404).json({ error: 'Profile not found' });
+    }
+
+    // Map skill levels to difficulty ranges
+    const skillLevelMapping = {
+      beginner: { VGrading: ['V0', 'V1', 'V2', 'V3'], colors: ['Pink', 'Red', 'Yellow', 'Green'] },
+      intermediate: { VGrading: ['V4', 'V5', 'V6', 'V7'], colors: ['Blue', 'White', 'Cyan', 'Orange'] },
+      advanced: { VGrading: ['V8', 'V9', 'V10'], colors: ['Brown', 'Light Green', 'Black'] },
+    };
+
+    const { VGrading, colors } = skillLevelMapping[profile.skillLevel] || {};
+
+    const preferredVideos = await Video.find({
+      $or: [
+        // Matches videos with correct grading system and difficulty levels and a matching gym
+        {
+          $and: [
+            { difficultyLevel: { $in: VGrading }, gradingSystem: 'V-Grading' },
+            { gym: { $in: profile.gyms.map((gym) => gym._id) } },
+          ],
+        },
+        {
+          $and: [
+            { difficultyLevel: { $in: colors }, gradingSystem: 'Japanese-Colored' },
+            { gym: { $in: profile.gyms.map((gym) => gym._id) } },
+          ],
+        },
+        // Matches videos with correct grading system and difficulty levels, regardless of gym
+        {
+          difficultyLevel: { $in: VGrading },
+          gradingSystem: 'V-Grading',
+        },
+        {
+          difficultyLevel: { $in: colors },
+          gradingSystem: 'Japanese-Colored',
+        },
+        // Matches videos where only the gym matches
+        {
+          gym: { $in: profile.gyms.map((gym) => gym._id) },
+        },
+      ],
+    })
+      .populate({
+        path: 'profile',
+        populate: { path: 'user', select: 'name email image' },
+      })
+      .populate('gym', 'name location');
+
+
+
+    // Fetch other videos
+    const otherVideos = await Video.find({
+      _id: { $nin: preferredVideos.map((video) => video._id) }, // Exclude preferred videos
+    })
+      .populate({
+        path: 'profile',
+        populate: { path: 'user', select: 'name email image' },
+      })
+      .populate('gym', 'name location');
+
+    // Combine and return results
+    res.status(200).json({ preferredVideos, otherVideos });
+  } catch (error) {
+    console.error('Error fetching videos by preferences:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
+
+
+
