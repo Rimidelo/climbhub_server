@@ -1,7 +1,17 @@
 // routes/video_routes.js
 import express from 'express';
 import multer from 'multer';
-import { uploadVideo,getAllVideos,likeVideo,addComment,getComments,getVideosByProfile,deleteVideo,getVideosByPreferences } from '../controllers/videos_controller.js';
+import {
+    uploadVideo,
+    getAllVideos,
+    likeVideo,
+    addComment,
+    getComments,
+    getVideosByProfile,
+    deleteVideo,
+    getVideosByPreferences,
+    getVideosByGym
+} from '../controllers/videos_controller.js';
 
 const router = express.Router();
 
@@ -19,6 +29,7 @@ router.get('/:videoId/comments', getComments);
 router.get('/profile/:profileId/videos', getVideosByProfile);
 router.delete('/:videoId', deleteVideo);
 router.get('/preferences/:userId', getVideosByPreferences);
+router.get('/gym/:gymId', getVideosByGym);
 
 
 export default router;

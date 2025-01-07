@@ -282,6 +282,29 @@ export const getVideosByPreferences = async (req, res) => {
   }
 };
 
+export const getVideosByGym = async (req, res) => {
+  const { gymId } = req.params;
+
+  try {
+    const videos = await Video.find({ gym: gymId })
+      .populate({
+        path: 'profile',
+        populate: { path: 'user', select: 'name email image skillLevel' },
+      })
+      .populate('gym', 'name location');
+
+    if (!videos || videos.length === 0) {
+      return res.status(404).json({ message: 'No videos found for this gym.' });
+    }
+
+    res.status(200).json(videos);
+  } catch (error) {
+    console.error('Error fetching videos for gym:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
+
 
 
 

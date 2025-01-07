@@ -1,4 +1,5 @@
 import Gym from '../models/gym.js'; // Adjust the path as necessary
+import Video from '../models/video.js';
 
 // Controller to get all gyms
 const getGyms = async (req, res) => {
@@ -87,4 +88,18 @@ const deleteGym = async (req, res) => {
     }
 };
 
-export { getGyms, createGym, getGym, updateGym, deleteGym };
+// Controller to get gyms with videos
+const getGymsWithVideos = async (req, res) => {
+    try {
+        const gymsWithVideos = await Gym.find({
+            _id: { $in: await Video.distinct("gym") }, // Reference Video model
+        });
+        res.status(200).json(gymsWithVideos);
+    } catch (err) {
+        console.error("Error fetching gyms with videos:", err);
+        res.status(500).json({ error: "Failed to load gyms with videos." });
+    }
+};
+
+
+export { getGyms, createGym, getGym, updateGym, deleteGym, getGymsWithVideos };
