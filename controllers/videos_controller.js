@@ -48,7 +48,7 @@ export const getAllVideos = async (req, res) => {
         path: 'profile',
         populate: {
           path: 'user',
-          select: 'name email image', // Populate the 'user' field with 'name' and 'email'
+          select: 'name email image skillLevel', // Populate the 'user' field with 'name' and 'email'
         },
       })
       .populate('gym', 'name location'); // Populate gym name and location fields
@@ -148,7 +148,7 @@ export const getComments = async (req, res) => {
         select: 'user', // Include the 'user' reference from Profile
         populate: {
           path: 'user',
-          select: 'name email image', // Include name (username equivalent) and email from User
+          select: 'name email image skillLevel', // Include name (username equivalent) and email from User
         },
       });
 
@@ -169,7 +169,7 @@ export const getVideosByProfile = async (req, res) => {
         path: 'profile',
         populate: {
           path: 'user',
-          select: 'name email image',
+          select: 'name email image skillLevel',
         },
       })
       .populate('gym', 'name location');
@@ -257,7 +257,7 @@ export const getVideosByPreferences = async (req, res) => {
       .sort({ createdAt: -1 })
       .populate({
         path: 'profile',
-        populate: { path: 'user', select: 'name email image' },
+        populate: { path: 'user', select: 'name email image skillLevel' },
       })
       .populate('gym', 'name location');
 
@@ -270,7 +270,7 @@ export const getVideosByPreferences = async (req, res) => {
       .sort({ createdAt: -1 })
       .populate({
         path: 'profile',
-        populate: { path: 'user', select: 'name email image' },
+        populate: { path: 'user', select: 'name email image skillLevel' },
       })
       .populate('gym', 'name location');
 
