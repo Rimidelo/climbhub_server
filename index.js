@@ -10,7 +10,7 @@ import gymRoutes from './routes/gym_routes.js';
 import userRoutes from './routes/user_routes.js';
 
 
-config(); // Load environment variables
+config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
