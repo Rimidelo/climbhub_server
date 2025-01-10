@@ -28,11 +28,23 @@ export const createProfile = async (req, res) => {
 // Get a profile by ID
 export const getProfile = async (req, res) => {
     const { id } = req.params;
-    
     try {
         const profile = await Profile.findOne({ user: id })
-            .populate('user', 'name email image ') // Adjust fields as necessary
-            .populate('gyms', 'name location'); // Adjust fields as necessary
+            .populate('user', 'name email image')
+            .populate('gyms', 'name location')
+            .populate({
+                path: 'savedVideos',
+                populate: [
+                    {
+                        path: 'profile',
+                        populate: { path: 'user', select: 'name email image skillLevel' },
+                    },
+                    {
+                        path: 'gym',
+                        select: 'name location',
+                    },
+                ],
+            });
 
         if (!profile) {
             return res.status(404).json({ error: 'Profile not found for the given user.' });
@@ -44,6 +56,7 @@ export const getProfile = async (req, res) => {
         res.status(500).json({ error: 'Server error while fetching profile.' });
     }
 };
+
 
 // Update a profile by ID
 export const updateProfile = async (req, res) => {
