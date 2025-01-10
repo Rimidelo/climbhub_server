@@ -10,7 +10,8 @@ import {
     getVideosByProfile,
     deleteVideo,
     getVideosByPreferences,
-    getVideosByGym
+    getVideosByGym,
+    saveVideo
 } from '../controllers/videos_controller.js';
 
 const router = express.Router();
@@ -30,6 +31,6 @@ router.get('/profile/:profileId/videos', getVideosByProfile);
 router.delete('/:videoId', deleteVideo);
 router.get('/preferences/:userId', getVideosByPreferences);
 router.get('/gym/:gymId', getVideosByGym);
-
+router.post('/:videoId/save', saveVideo);
 
 export default router;

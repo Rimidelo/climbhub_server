@@ -304,6 +304,48 @@ export const getVideosByGym = async (req, res) => {
   }
 };
 
+// controllers/video_controller.js
+
+export const saveVideo = async (req, res) => {
+  const { videoId } = req.params;
+  const { userId } = req.body; // we’ll send this from client
+
+  if (!userId) {
+    return res.status(400).json({ error: 'User ID is required to save video' });
+  }
+
+  try {
+    // 1) Fetch the user’s profile
+    const profile = await Profile.findOne({ user: userId });
+    if (!profile) {
+      return res.status(404).json({ error: 'Profile not found for this user' });
+    }
+
+    // 2) Check if video is already saved
+    const isAlreadySaved = profile.savedVideos.includes(videoId);
+
+    if (isAlreadySaved) {
+      // Unsave (remove video from savedVideos)
+      profile.savedVideos.pull(videoId);
+    } else {
+      // Save (add video to savedVideos)
+      profile.savedVideos.push(videoId);
+    }
+
+    // 3) Persist changes
+    await profile.save();
+
+    // Optionally, you could populate or return the entire updated profile
+    // For now, we’ll just return a status with a simple message
+    return res.json({
+      message: isAlreadySaved ? 'Video unsaved' : 'Video saved',
+      savedVideos: profile.savedVideos, // in case you want to update UI
+    });
+  } catch (error) {
+    console.error('Error saving/unsaving video:', error);
+    return res.status(500).json({ error: 'Server error' });
+  }
+};
 
 
 
