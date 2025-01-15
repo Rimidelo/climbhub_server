@@ -103,16 +103,12 @@ export const searchProfiles = async (req, res) => {
             return res.status(200).json([]);
         }
 
-        // Find users whose "name" matches (case-insensitive)
         const matchedUsers = await User.find({
             name: { $regex: q, $options: 'i' },
         }).select('_id');
 
         const matchedUserIds = matchedUsers.map((user) => user._id);
 
-        // Find profiles where either:
-        // - the skillLevel matches the search term (as a regex), OR
-        // - the profile.user is in the array of matchedUserIds
         const matchedProfiles = await Profile.find({
             $or: [
                 { skillLevel: { $regex: q, $options: 'i' } },
