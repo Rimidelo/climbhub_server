@@ -1,5 +1,7 @@
 // controllers/profile_controller.js
 import Profile from '../models/profile.js';
+import User from '../models/user.js';
+
 
 // Create a new profile
 export const createProfile = async (req, res) => {
@@ -91,5 +93,38 @@ export const deleteProfile = async (req, res) => {
     } catch (error) {
         console.error('Error deleting profile:', error);
         res.status(500).json({ error: 'Server error' });
+    }
+};
+
+export const searchProfiles = async (req, res) => {
+    try {
+        const { q } = req.query; // e.g., ?q=alex
+        if (!q) {
+            return res.status(200).json([]);
+        }
+
+        // Find users whose "name" matches (case-insensitive)
+        const matchedUsers = await User.find({
+            name: { $regex: q, $options: 'i' },
+        }).select('_id');
+
+        const matchedUserIds = matchedUsers.map((user) => user._id);
+
+        // Find profiles where either:
+        // - the skillLevel matches the search term (as a regex), OR
+        // - the profile.user is in the array of matchedUserIds
+        const matchedProfiles = await Profile.find({
+            $or: [
+                { skillLevel: { $regex: q, $options: 'i' } },
+                { user: { $in: matchedUserIds } },
+            ],
+        })
+            .populate('user', 'name email image')
+            .populate('gyms', 'name location');
+
+        return res.json(matchedProfiles);
+    } catch (error) {
+        console.error('Error searching profiles:', error);
+        return res.status(500).json({ error: 'Server error while searching profiles' });
     }
 };
